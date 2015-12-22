@@ -10,7 +10,7 @@ defmodule Shittalker do
       # Start the endpoint when the application starts
       supervisor(Shittalker.Endpoint, []),
       # Start the Ecto repository
-      # supervisor(Shittalker.Repo, []),
+      supervisor(Shittalker.Repo, []),
       # Here you could define other workers and supervisors as children
       # worker(Shittalker.Worker, [arg1, arg2, arg3]),
     ]
