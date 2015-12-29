@@ -7,6 +7,7 @@ defmodule Shittalker.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Shittalker.Auth, repo: Shittalker.Repo
   end
 
   pipeline :api do
