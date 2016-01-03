@@ -35,6 +35,7 @@ defmodule Shittalker.Web do
       import Ecto.Query, only: [from: 1, from: 2]
 
       import Shittalker.Router.Helpers
+      import Shittalker.Auth, only: [authenticate_user: 2]
       import Shittalker.Gettext
     end
   end
@@ -58,6 +59,7 @@ defmodule Shittalker.Web do
   def router do
     quote do
       use Phoenix.Router
+      import Shittalker.Auth, only: [authenticate_user: 2]
     end
   end
 
