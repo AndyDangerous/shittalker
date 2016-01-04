@@ -2,7 +2,7 @@ defmodule Shittalker.Video do
   use Shittalker.Web, :model
 
   schema "videos" do
-    field :"url", :string
+    field :url, :string
     field :title, :string
     field :description, :string
     belongs_to :user, Shittalker.User
