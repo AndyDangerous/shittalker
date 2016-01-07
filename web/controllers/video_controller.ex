@@ -4,6 +4,7 @@ defmodule Shittalker.VideoController do
   alias Shittalker.Video
 
   plug :scrub_params, "video" when action in [:create, :update]
+  plug :load_categories when action in [:new, :create, :edit, :update]
 
   def action(conn, _) do
     apply(
@@ -81,4 +82,12 @@ defmodule Shittalker.VideoController do
 
   defp user_videos(user),
     do: assoc(user, :videos)
+
+  defp load_categories(conn, _) do
+    categories = Repo.all(
+      from c in Shittalker.Category.alphabetical(),
+      select: {c.name, c.id}
+    )
+    assign(conn, :categories, categories)
+  end
 end
