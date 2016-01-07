@@ -22,7 +22,6 @@ defmodule Shittalker.UserController do
         |> redirect(to: user_path(conn, :index))
       {:error, changeset} ->
         conn
-        |> put_flash(:error, "Something went wrong. Try again.")
         |> render("new.html", changeset: changeset)
     end
   end
