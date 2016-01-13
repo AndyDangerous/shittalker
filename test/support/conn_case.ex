@@ -25,6 +25,7 @@ defmodule Shittalker.ConnCase do
       import Ecto.Query, only: [from: 2]
 
       import Shittalker.Router.Helpers
+      import Shittalker.TestHelpers
 
       # The default endpoint for testing
       @endpoint Shittalker.Endpoint
