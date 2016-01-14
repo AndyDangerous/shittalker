@@ -1,4 +1,5 @@
 defmodule Shittalker.VideoControllerTest do
+  alias Shittalker.Video
   use Shittalker.ConnCase
 
   test "requires user authentication on all actions", %{conn: conn} do
@@ -15,6 +16,27 @@ defmodule Shittalker.VideoControllerTest do
       end)
   end
 
+  @valid_attrs %{url: "http://webs.ite", title: "vid", description: "A test vid"}
+  @invalid_attrs %{title: "invalid"}
+
+  defp video_count(query),
+    do: Repo.one(from v in query, select: count(v.id))
+
+  @tag login_as: "Heike"
+  test "creates user video and redirects", %{conn: conn, user: user} do
+    conn = post conn, video_path(conn, :create), video: @valid_attrs
+    assert redirected_to(conn) == video_path(conn, :index)
+    assert Repo.get_by!(Video, @valid_attrs).user_id == user.id
+  end
+
+  @tag login_as: "Heike"
+  test "does not create videos and renders errors when invalid", %{conn: conn} do
+    count_before = video_count(Video)
+    conn = post conn, video_path(conn, :create), video: @invalid_attrs
+    assert html_response(conn, 200) =~ "error"
+    assert video_count(Video) == count_before
+  end
+
   setup %{conn: conn} = config  do
     if username = config[:login_as] do
       user = insert_user(username: "Heike")
@@ -22,6 +44,26 @@ defmodule Shittalker.VideoControllerTest do
       {:ok, conn: conn, user: user}
     else
       :ok
+    end
+  end
+
+  @tag login_as: "Heike"
+  test "authorizes actions against access by other users", %{user: owner, conn: conn} do
+    video = insert_video(owner, @valid_attrs)
+    non_owner = insert_user(username: "Non Owner")
+    conn = assign(conn, :current_user, non_owner)
+
+    assert_raise Ecto.NoResultsError, fn ->
+      get(conn, video_path(conn, :show, video))
+    end
+    assert_raise Ecto.NoResultsError, fn ->
+      get(conn, video_path(conn, :edit, video))
+    end
+    assert_raise Ecto.NoResultsError, fn ->
+      get(conn, video_path(conn, :update, video, video: @valid_attrs))
+    end
+    assert_raise Ecto.NoResultsError, fn ->
+      get(conn, video_path(conn, :delete, video))
     end
   end
 
