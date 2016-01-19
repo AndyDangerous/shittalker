@@ -17,3 +17,7 @@ config :shittalker, Shittalker.Repo,
   database: "shittalker_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# trade security for speed during tests
+config :comeonin, :bcrypt_log_rounds, 4
+config :comeonin, :pbkdf2_rounds, 1
