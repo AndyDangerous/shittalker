@@ -17,8 +17,10 @@ defmodule Shittalker.ModelCase do
   using do
     quote do
       alias Shittalker.Repo
+      import Ecto
       import Ecto.Model
-      import Ecto.Query, only: [from: 2]
+      import Ecto.Query, only: [from: 1, from: 2]
+      import Shittalker.TestHelpers
       import Shittalker.ModelCase
     end
   end
