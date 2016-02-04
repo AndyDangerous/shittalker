@@ -5,6 +5,9 @@ defmodule Shittalker.Video do
     field :url, :string
     field :title, :string
     field :description, :string
+    field :slug, :string
+
+
     belongs_to :user, Shittalker.User
     belongs_to :category, Shittalker.Category
 
@@ -23,6 +26,21 @@ defmodule Shittalker.Video do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+    |> slugify_title()
     |> foreign_key_constraint(:category_id)
+  end
+
+  defp slugify_title(changeset) do
+    if title = get_change(changeset, :title) do
+      put_change(changeset, :slug, slugify(title))
+    else
+      changeset
+    end
+  end
+
+  defp slugify(string) do
+    string
+    |> String.downcase()
+    |> String.replace(~r/[^\w-]+/,"-")
   end
 end
