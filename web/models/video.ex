@@ -1,6 +1,8 @@
 defmodule Shittalker.Video do
   use Shittalker.Web, :model
 
+  @primary_key {:id, Shittalker.Permalink, autogenerate: true}
+
   schema "videos" do
     field :url, :string
     field :title, :string
@@ -42,5 +44,11 @@ defmodule Shittalker.Video do
     string
     |> String.downcase()
     |> String.replace(~r/[^\w-]+/,"-")
+  end
+end
+
+defimpl Phoenix.Param, for: Shittalker.Video do
+  def to_param(%{slug: slug, id: id}) do
+    "#{id}-#{slug}"
   end
 end
